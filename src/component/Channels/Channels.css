@@ -1,0 +1,9 @@
+.ant-layout-sider-trigger {
+    background-color: rgba(255,255,255,0.08);
+}
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    background-color:rgb(60, 184, 255);
+}
+ul.ant-menu.ant-menu-dark.ant-menu-root.ant-menu-inline {
+    font-weight: bolder;
+}
