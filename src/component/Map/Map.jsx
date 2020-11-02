@@ -6,6 +6,7 @@ import './Map.css';
 import { mapboxMap } from '../../constants';
 
 class Map extends React.Component {
+    
     componentDidMount() {
         this.initMap();
     }

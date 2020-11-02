@@ -1,11 +1,15 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const express = require('express')
+const app = express()
+const expressWs = require('express-ws')
+const websocket = require('./websocket')
 
-app.get('/mapmatching', (req,res) => {
-    res.send('Hello World!');
-})
+const port=3002;
 
+expressWs(app);
+
+app.use(express.static('public'))
+app.use('/', websocket)
+app.get('*', (req, res) => {})
 app.listen(port, () => {
-    console.log(`Listening on port ${port}!`);
+  console.log(`server is listening on port ${ port }`)
 })
