@@ -35,13 +35,14 @@ class Channels extends React.Component {
     ws.onopen = e => {
       console.log(`WebSocket 连接状态： ${ws.readyState}`)
     }
-        ws.onmessage = data => {
-            console.log(data.data);
-        }
-        ws.onclose = data => {
-            console.log(`WebSocket连接已关闭:${ws.readyState}`)
-          }
+    ws.onmessage = data => {
+      console.log(data.data);
     }
+    ws.onclose = data => {
+      console.log(`WebSocket连接已关闭:${ws.readyState}`)
+    }
+  }
+
 
   render() {
     return (
