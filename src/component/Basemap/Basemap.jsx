@@ -1,17 +1,49 @@
 import React from 'react';
 import L from 'leaflet';
 import 'leaflet-draw';
-import './Map.css';
+import './Basemap.css';
 // import { osmMap } from '../../constants';
 import { mapboxMap } from '../../constants';
+import { connect } from 'react-redux';
+import { initMap } from '../../redux/actions';
 
-class Map extends React.Component {
+const parse = require('wellknown');
+
+class Basemap extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     
     componentDidMount() {
-        this.initMap();
+        this.showMap();
     }
 
-    initMap = () => {
+    reveiveTopics() {
+        var ws = new WebSocket(`ws://127.0.0.1:3002/mapmatching`);
+        
+        ws.onopen = e => {
+          console.log(`WebSocket 连接状态： ${ws.readyState}`)
+        }
+
+        ws.onmessage = message => {
+            let mapmatching_point =  JSON.parse(message);
+            let lng = +parse(mapmatching_point["point"]).coordinates[0];
+            let lat = +parse(mapmatching_point["point"]).coordinates[1];
+        
+            //   var mapmatching_layer = L.geoJson(parse(mapmatching_point["point"])).addTo(this.state.leafletMap);
+            (L.circle(L.latLng(lat,lng), 1, {
+                color: '#CAFF70',
+                fillColor: '#CAFF70',
+                fillOpacity: 0.2
+            })).addTo(this.state.leafletMap);
+        }
+
+        ws.onclose = message => {
+            console.log(`WebSocket连接已关闭:${ws.readyState}`)
+        }
+    }
+    
+    showMap = () => {
         //#region OSM底图
         // var osmTile = L.tileLayer(osmMap.osmUrl, {
         //         attribution: osmMap.osmAttrib,
@@ -28,12 +60,13 @@ class Map extends React.Component {
         //#endregion
         //'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2xlZXB5Z2dnIiwiYSI6ImNqd3c1eG1vcTBnY2ozenFzeXplODIxMGIifQ.XYsbgqbl7JQcmopfr9T5hQ'
         
-        var mapboxTile = L.tileLayer(mapboxMap.mapboxUrl, { 
+        var mapboxTile = L.tileLayer(mapboxMap.mapboxUrl, {
                 maxZoom: 18,
                 minZoom: 2,
                 opacity: 0.8,
         });
-        L.map("mapContainer", {
+
+        var leafletMap = L.map("mapContainer", {
             maxBounds: [[-85, -180], [85, 180]],
             zoomControl: false,
             nowrap:true,
@@ -41,7 +74,9 @@ class Map extends React.Component {
             zoomOffset: -1
         })
         .addLayer(mapboxTile)
-        .setView([39.9, 116.4], 10);        
+        .setView([24.494413,118.126646], 10);
+
+        this.props.initMap(leafletMap);
 
         // osm.zoomControl.setPosition('topright');
         //#region 添加绘制工具
@@ -77,4 +112,12 @@ class Map extends React.Component {
     }
 }
 
-export default Map;
+const mapStateToProps = state => {
+    console.log(state);
+    return {};
+}
+
+export default connect(
+    mapStateToProps,
+    { initMap }
+)(Basemap);

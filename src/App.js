@@ -1,15 +1,13 @@
 import React from 'react';
 import './App.css';
-import Map from './component/Map/Map.jsx';
+import Basemap from './component/Basemap/Basemap.jsx';
 import Sider from './component/Sider/Sider.jsx';
-import Realtime from './component/Realtime'
 
 function App() {
   return (
     <div className="App">
-      <Map />
+      <Basemap />
       <Sider />
-      {/* <Realtime /> */}
     </div>
   );
 }

@@ -10,13 +10,20 @@ import {
   Redirect
 } from "react-router-dom";
 
+import { connect } from 'react-redux';
+
+const parse = require('wellknown');
+
 const {  Sider } = Layout;
 
 
 class Channels extends React.Component {
+  constructor(props){
+    super(props)
+  }
   state = {
     collapsed: false,
-
+    operationSelected:'',
   };
 
   onCollapse = (collapsed) => {
@@ -27,21 +34,22 @@ class Channels extends React.Component {
   handleClick = (e) => {
     // console.log('click ', e);
     // console.log(e.key);
-    this.initWebsocket(e.key);
+    // this.initWebsocket(e.key);
   }
 
-  initWebsocket(operation_type) {
-    const ws = new WebSocket(`ws://127.0.0.1:3002/${operation_type}`);
-    ws.onopen = e => {
-      console.log(`WebSocket 连接状态： ${ws.readyState}`)
-    }
-    ws.onmessage = data => {
-      console.log(data.data);
-    }
-    ws.onclose = data => {
-      console.log(`WebSocket连接已关闭:${ws.readyState}`)
-    }
-  }
+  // initWebsocket(operation_type) {
+  //   const ws = new WebSocket(`ws://127.0.0.1:3002/${operation_type}`);
+    
+  //   ws.onopen = e => {
+  //     console.log(`WebSocket 连接状态： ${ws.readyState}`)
+  //   }
+  //   ws.onmessage = data => {
+  //     console.log(data.data);
+  //   }
+  //   ws.onclose = data => {
+  //     console.log(`WebSocket连接已关闭:${ws.readyState}`)
+  //   }
+  // }
 
 
   render() {
@@ -102,4 +110,12 @@ class Channels extends React.Component {
   }
 }
 
-export default Channels;
+const mapStateToProps = state=> {
+  // console.log(state.baseMap);
+  return { baseMap: state.baseMap };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(Channels);

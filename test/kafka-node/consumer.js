@@ -1,8 +1,9 @@
 
 
 const kafka = require('kafka-node');
+var parse = require('wellknown');
 
-const mapmatching_topic = "mapmatching-origion1";
+const mapmatching_topic = "mapmathcing-result1"; // mapmatching-origion1
 
 const client = new kafka.KafkaClient({
     kafkaHost: 'localhost:9092',
@@ -19,7 +20,7 @@ let consumer = new Consumer(
         fetchMaxBytes: 1024 * 1024,
         encoding: 'utf-8',
         groupId: 'group-test',
-        fromOffset: 'earliest',
+        fromOffset: 'earliest',//earliest
     }
 );
 
@@ -27,9 +28,9 @@ consumer.on('message', onMessage);
 consumer.on('error', onError);
 
 function onMessage (message) {
-    console.log(
-        //   JSON.parse(message.value)
-        message.value);
+    var result_point = JSON.parse(message.value);
+    console.log(result_point);
+    // console.log(parse(result_point["point"]).coordinates[0]+'   '+parse(result_point["point"]).coordinates[1]);
 }
 
 function onError(error) {

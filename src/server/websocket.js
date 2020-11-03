@@ -11,7 +11,7 @@ router.ws('/mapmatching', (ws, req) => {
 
 const kafka = require('kafka-node');
 
-const mapmatching_topic = "mapmatching-origion1";
+const mapmatching_topic = "mapmathcing-result1";
 
 const client = new kafka.KafkaClient({
     kafkaHost: 'localhost:9092',
@@ -28,7 +28,7 @@ let consumer = new Consumer(
         fetchMaxBytes: 1024 * 1024,
         encoding: 'utf-8',
         groupId: 'group-test',
-        fromOffset: 'earliest',
+        fromOffset: 'false',// earliest
     }
 );
 
@@ -36,11 +36,7 @@ consumer.on('message', onMessage);
 consumer.on('error', onError);
 
 function onMessage (message) {
-  ws.send(message.value);
-    console.log(
-      'kafka:',
-        //   JSON.parse(message.value)
-        message.value);
+  ws.send(JSON.parse(message.value));
 }
 
 function onError(error) {
