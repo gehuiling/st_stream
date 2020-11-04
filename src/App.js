@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
-import Basemap from './component/Basemap/Basemap.jsx';
-import Sider from './component/Sider/Sider.jsx';
+import Basemap from './component/Basemap/Basemap';
+import Sider from './component/Sider/Sider';
 
 function App() {
-  return (
-    <div className="App">
-      <Basemap />
-      <Sider />
-    </div>
-  );
+    return ( 
+        <div className = "App" >
+            <Basemap / >
+            <Sider / >
+        </div>
+    );
 }
 
 export default App;

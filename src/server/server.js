@@ -3,7 +3,7 @@ const app = express()
 const expressWs = require('express-ws')
 const websocket = require('./websocket')
 
-const port=3002;
+const port = 3002;
 
 expressWs(app);
 

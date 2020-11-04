@@ -1,3 +1,6 @@
+/**
+ * You can add reducers here
+ */
 import { combineReducers } from 'redux';
 import basemap from './basemap';
 

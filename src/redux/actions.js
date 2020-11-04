@@ -1,12 +1,15 @@
-import {INIT_MAP, } from './actionTypes';
+/**
+ * Create actions here
+ */
+import {
+    INIT_MAP,
+} from './actionTypes';
 
-export const initMap = (mapObj)　=> {
-    return(
-        {
-            type: INIT_MAP,
-            payload: {
-                mapObj
-            }
+export const initMap = (mapObj) => {
+    return ({
+        type: INIT_MAP,
+        payload: {
+            mapObj
         }
-    )
+    })
 }

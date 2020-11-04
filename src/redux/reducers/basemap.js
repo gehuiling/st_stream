@@ -1,18 +1,21 @@
-
-import { INIT_MAP } from '../actionTypes';
+import {
+    INIT_MAP
+} from '../actionTypes';
 
 const initState = {
-    baseMap: null,
+    mapObj: null,
 
 }
 
-export default function(state=initState, action) {
-    switch(action.type) {
+export default function (state = initState, action) {
+    switch (action.type) {
         case INIT_MAP: { // 底图初始化
-            let { mapObj } = action.payload;
+            let {
+                mapObj
+            } = action.payload;
             return {
                 ...state,
-                baseMap: mapObj
+                mapObj
             }
         }
         default:
