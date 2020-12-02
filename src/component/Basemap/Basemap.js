@@ -2,7 +2,7 @@ import React from 'react';
 import L from 'leaflet';
 import 'leaflet-draw';
 import './Basemap.css';
-// import { osmMap } from '../../constants';
+import { osmMap } from '../../constants';
 import { mapboxMap } from '../../constants';
 import { connect } from 'react-redux';
 import { initMap } from '../../redux/actions';
@@ -13,34 +13,61 @@ const parse = require('wellknown');
  * 底图组件
  */
 class Basemap extends React.Component {
+    constructor(props){
+        super(props);
+        // this.showGrid.bind(this);
+    }
 
     componentDidMount() {
         this.showMap();
+        // this.reveiveTopics();
+        // console.log(this.props.mapObj);
+        // this.showGrid();
     }
 
-    reveiveTopics =  () =>  {
-        var ws = new WebSocket(`ws://127.0.0.1:3002/mapmatching`);
+    // showGrid = function() {
 
-        ws.onopen = e => {
-            console.log(`WebSocket 连接状态： ${ws.readyState}`)
-        }
+    //     var tiles = new L.GridLayer({opacity:0.5});
+    //     tiles.createTile = function (coords) {
+    //         var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+    //         var ctx = tile.getContext('2d');
+    //         var size = this.getTileSize();
+    //         tile.width = size.x;
+    //         tile.height = size.y;
+    //         // console.log(coords);
+    //         // 将切片号乘以切片分辨率，默认为256pixel,得到切片左上角的绝对像素坐标
+    //         var nwPoint = coords.scaleBy(size)
+    //         // console.log(nwPoint)
+    //         // 根据绝对像素坐标，以及缩放层级，反投影得到其经纬度
+    //         var nw = this.props.mapObj.unproject(nwPoint, coords.z)
+    //         console.log(nw)
+    //         //从该切片左上角开始画，画一个切片大小的无填充矩形
+    //         ctx.strokeRect(nwPoint.x, nwPoint.y,size.x,size.y)
+    //         ctx.fillStyle = 'black';
+    //         //x,y,z显示
+    //         ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 50, 60);
+    //         //经纬度坐标
+    //         ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 50, 80);
+    //         //线的颜色
+    //         ctx.strokeStyle = 'black';
+    //         //这是canvans的方法
+    //         ctx.beginPath();
+    //         ctx.moveTo(0, 0);
+    //         ctx.lineTo(size.x - 1, 0);
+    //         ctx.lineTo(size.x - 1, size.y - 1);
+    //         ctx.lineTo(0, size.y - 1);
+    //         ctx.closePath();
+    //         ctx.stroke();
+    //         ctx.fillStyle = "#f00";
+    //         ctx.fillRect(3,4,20,20);
+        
+    //         return tile;
+    //     }
+    //     tiles.addTo(this.props.mapObj);
+    // }
 
-        ws.onmessage = message => {
-            let mapmatching_point = JSON.parse(message);
-            let lng = +parse(mapmatching_point["point"]).coordinates[0];
-            let lat = +parse(mapmatching_point["point"]).coordinates[1];
-
-            //   var mapmatching_layer = L.geoJson(parse(mapmatching_point["point"])).addTo(this.state.leafletMap);
-            (L.circle(L.latLng(lat, lng), 1, {
-                color: '#CAFF70',
-                fillColor: '#CAFF70',
-                fillOpacity: 0.2
-            })).addTo(this.state.leafletMap);
-        }
-
-        ws.onclose = message => {
-            console.log(`WebSocket连接已关闭:${ws.readyState}`)
-        }
+    reveiveTopics = () => {
+        
     }
 
     showMap = () => {
@@ -50,16 +77,19 @@ class Basemap extends React.Component {
         //         opacity:1,
         //         nowrap:true 
         //     });
-        // var osm =L.map("mapContainer", {
+        // var leafletMap =L.map("mapContainer", {
         //     maxZoom: 17,
         //     minZoom: 2,
-        //     maxBounds: [[-85, -180], [85, 180]],
+        //     maxBounds: [[-90, -180], [90, 180]],
         //     layers: osmTile,
         //     zoomControl: false
-        // }).setView([39.9, 116.4], 10);
+        // })
+        //   .addLayer(osmTile)
+        //   .setView([24.494413, 118.126646], 14);
         //#endregion
         //'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2xlZXB5Z2dnIiwiYSI6ImNqd3c1eG1vcTBnY2ozenFzeXplODIxMGIifQ.XYsbgqbl7JQcmopfr9T5hQ'
 
+        //#region mapbox底图
         var mapboxTile = L.tileLayer(mapboxMap.mapboxUrl, {
             maxZoom: 18,
             minZoom: 2,
@@ -74,9 +104,157 @@ class Basemap extends React.Component {
             zoomOffset: -1
         })
             .addLayer(mapboxTile)
-            .setView([24.494413, 118.126646], 10);
+            .setView([24.494413, 118.126646], 14);
+        //#endregion
 
         this.props.initMap(leafletMap);
+
+        //#region 实验
+        
+        // var ws = new WebSocket(`ws://127.0.0.1:3002/heatmap`);
+    
+        // ws.onopen = e => {
+        //     console.log(`WebSocket 连接状态： ${ws.readyState}`);
+        // }
+
+        // function setColor(count) {
+        //     var lc = Math.log(count + 1) / Math.log(10);
+        //     var r = Math.floor(256 * Math.min(1, lc));
+        //     var g = Math.floor(256 * Math.min(1, Math.max(0, lc)));
+        //     var b = Math.floor(256 * Math.min(1, Math.max(0, lc-2)));
+        //     var a = Math.min(1, lc);
+        //     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+        // }
+
+        // ws.onmessage = message => {
+        //     let heatmap_msg = JSON.parse(message.data);
+        //     // console.log(heatmap_msg["tiles"]);
+        //     var tiles = new L.GridLayer();
+        //     tiles.createTile = function (coords) {
+        //         var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+        //         var ctx = tile.getContext('2d');
+        //         var size = this.getTileSize()
+        //         // console.log(this)
+        //         tile.width = size.x
+        //         tile.height = size.y
+        //         // 将切片号乘以切片分辨率，默认为256pixel,得到切片左上角的绝对像素坐标
+        //         var nwPoint = coords.scaleBy(size)
+        //         // 根据绝对像素坐标，以及缩放层级，反投影得到其经纬度
+        //         var nw = leafletMap.unproject(nwPoint, coords.z)
+        //         //从该切片左上角开始画，画一个切片大小的无填充矩形
+        //         ctx.strokeRect(nwPoint.x, nwPoint.y,size.x,size.y)
+        //         ctx.fillStyle = 'black';
+        //         //x,y,z显示
+        //         ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 50, 60);
+        //         //经纬度坐标
+        //         ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 50, 80);
+        //         //线的颜色
+        //         ctx.strokeStyle = 'black';
+        //         //这是canvans的方法
+        //         ctx.beginPath();
+        //         ctx.moveTo(0, 0);
+        //         ctx.lineTo(size.x - 1, 0);
+        //         ctx.lineTo(size.x - 1, size.y - 1);
+        //         ctx.lineTo(0, size.y - 1);
+        //         ctx.closePath();
+        //         ctx.stroke();
+        //         for(let tile_item of heatmap_msg["tiles"]) {
+        //             if(tile_item.tile_x == coords.x && tile_item.tile_y == coords.y){
+        //                 for (let i in tile_item["data"]) {
+        //                     let x = (i) % 256 ;
+        //                     let y = (i) / 256 ;
+
+        //                     x > 256 ? x=256: x=x;
+        //                     x < 0 ? x=0: x=x;
+        //                     y > 256 ? y=256: y=y;
+        //                     y < 0 ? y=0: y=y;
+        //                     var p_color = setColor(tile_item["data"][i])
+                        
+        //                     ctx.fillStyle = p_color;
+        //                     ctx.fillRect(x,y,10,10);
+        //                 }   
+        //             }
+        //         }
+        //         return tile;
+        //     }
+        //     tiles.addTo(leafletMap);
+          
+        // }
+    
+        // ws.onclose = message => {
+        //     console.log(`WebSocket连接已关闭:${ws.readyState}`)
+        // }
+        //#endregion 实验
+
+
+        //#region heatmap
+        // tiles.createTile = function (coords) {
+        //     var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+        //     var ctx = tile.getContext('2d');
+        //     var size = this.getTileSize();
+        //     tile.width = size.x;
+        //     tile.height = size.y;
+        //     // 将切片号乘以切片分辨率，默认为256pixel,得到切片左上角的绝对像素坐标
+        //     var nwPoint = coords.scaleBy(size)
+        //     // 根据绝对像素坐标，以及缩放层级，反投影得到其经纬度
+        //     var nw = leafletMap.unproject(nwPoint, coords.z)
+        //     //从该切片左上角开始画，画一个切片大小的无填充矩形
+        //     ctx.strokeRect(nwPoint.x, nwPoint.y,size.x,size.y)
+        //     ctx.fillStyle = 'black';
+        //     //x,y,z显示
+        //     ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 50, 60);
+        //     //经纬度坐标
+        //     ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 50, 80);
+        //     //线的颜色
+        //     ctx.strokeStyle = 'black';
+        //     //这是canvans的方法
+        //     ctx.beginPath();
+        //     ctx.moveTo(0, 0);
+        //     ctx.lineTo(size.x - 1, 0);
+        //     ctx.lineTo(size.x - 1, size.y - 1);
+        //     ctx.lineTo(0, size.y - 1);
+        //     ctx.closePath();
+        //     ctx.stroke();
+
+        //     // if(coords.x ==13568 && coords.y ==7041 ) {
+        //     var pixels = setCount();
+        //     for (let i=0;i<pixels.length;i++) {
+        //         let x = (i) % 256 ;
+        //         let y = (i) / 256 ;
+
+        //         x > 256 ? x=256: x=x;
+        //         x < 0 ? x=0: x=x;
+        //         y > 256 ? y=256: y=y;
+        //         y < 0 ? y=0: y=y;
+
+        //         var color = setColor(pixels[i]);
+        //         ctx.fillStyle = color;
+        //         ctx.fillRect(x,y,2,2);
+        //     }
+        //     function setColor(count) {
+        //     var lc = Math.log(count + 1) / Math.log(10);
+        //     var r = Math.floor(256 * Math.min(1, lc));
+        //     var g = Math.floor(256 * Math.min(1, Math.max(0, lc)));
+        //     var b = Math.floor(256 * Math.min(1, Math.max(0, lc-2)));
+        //     var a = Math.min(1, lc);
+        //     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+        //     }
+        //     function setCount() {
+        //         var pixels = new Array(256*256).fill(0);
+        //         for(let i in pixels) {
+        //             pixels[i] = Math.floor(Math.random()*10);
+        //         }
+        //         for(let i=0;i<pixels.length;i++) {
+        //             if(i%3 == 0 || i%40 == 0 || i%50 == 0 || i%60 == 0 || i%70 == 0 || i%80 == 0 || i%90 == 0) {
+        //                 pixels[i] =0;
+        //             }
+        //         }
+        //         return pixels;
+        //     }
+        // // }
+        //     return tile;
+        // }
+        //#endregion
 
         // osm.zoomControl.setPosition('topright');
         //#region 添加绘制工具
@@ -113,8 +291,8 @@ class Basemap extends React.Component {
 }
 
 const mapStateToProps = state => {
-    // console.log(state.basemap);
-    return {};
+    // console.log(state);
+    return { mapObj: state.basemap.mapObj };
 }
 
 export default connect(

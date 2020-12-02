@@ -9,15 +9,15 @@ const initState = {
 
 export default function (state = initState, action) {
     switch (action.type) {
-        case INIT_MAP: { // 底图初始化
-            let {
-                mapObj
-            } = action.payload;
+        // 底图初始化
+        case INIT_MAP: { 
+            let { mapObj } = action.payload;
             return {
                 ...state,
                 mapObj
             }
         }
+        
         default:
             return state;
     }

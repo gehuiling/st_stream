@@ -3,7 +3,7 @@
 const kafka = require('kafka-node');
 var parse = require('wellknown');
 
-const mapmatching_topic = "mapmathcing-result1"; // mapmatching-origion1
+const mapmatching_topic = "t1"; // mapmatching-origion1
 
 const client = new kafka.KafkaClient({
     kafkaHost: 'localhost:9092',

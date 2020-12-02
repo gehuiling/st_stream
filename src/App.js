@@ -6,8 +6,8 @@ import Sider from './component/Sider/Sider';
 function App() {
     return ( 
         <div className = "App" >
-            <Basemap / >
-            <Sider / >
+            <Basemap />
+            <Sider />
         </div>
     );
 }

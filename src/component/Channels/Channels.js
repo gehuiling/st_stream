@@ -2,7 +2,8 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import { StarOutlined, SettingOutlined, AlertOutlined, MonitorOutlined } from '@ant-design/icons';
 import './Channels.css';
-import L from 'leaflet';
+import L, { LayerGroup,GridLayer } from 'leaflet';
+import 'leaflet-draw';
 import {
   BrowserRouter as Router,
   Switch,
@@ -32,8 +33,7 @@ class Channels extends React.Component {
 
   onCollapse = (collapsed) => {
     // console.log(collapsed);
-    this.setState({ collapsed });
-
+    this.setState({ collapsed });   
   }
 
   componentDidMount() {
@@ -46,17 +46,21 @@ class Channels extends React.Component {
     ws.onopen = e => {
         console.log(`WebSocket 连接状态： ${ws.readyState}`);
     }
-
+    var mapmatchingLayer;
+    var layerGrop = new L.layerGroup();
     ws.onmessage = message => {
       let mapmatching_point = JSON.parse(message.data);
       let lng = parse(mapmatching_point["point"]).coordinates[0];
       let lat = parse(mapmatching_point["point"]).coordinates[1];
-      console.log(lng,lat);
+      // console.log(lng,lat);
       (L.circle(L.latLng(lat, lng), 2, {
-        color: '#CAFF70',
-        fillColor: '#CAFF70',
+        color: '#DC143C',
+        fillColor: '#DC143C',
         fillOpacity: 0.2
-      })).addTo(this.props.mapObj); 
+      })).addTo(layerGrop);
+      layerGrop.addTo(this.props.mapObj);
+      // console.log(layerGrop);
+      // mapmatchingLayer.addTo(this.props.mapObj);
     }
 
     ws.onclose = message => {
@@ -70,21 +74,6 @@ class Channels extends React.Component {
     // this.initWebsocket(e.key);
     // console.log(this.props.mapObj);
   }
-
-  // initWebsocket(operation_type) {
-  //   const ws = new WebSocket(`ws://127.0.0.1:3002/${operation_type}`);
-
-  //   ws.onopen = e => {
-  //     console.log(`WebSocket 连接状态： ${ws.readyState}`)
-  //   }
-  //   ws.onmessage = data => {
-  //     console.log(data.data);
-  //   }
-  //   ws.onclose = data => {
-  //     console.log(`WebSocket连接已关闭:${ws.readyState}`)
-  //   }
-  // }
-
 
   render() {
     return (
@@ -145,7 +134,7 @@ class Channels extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.basemap.mapObj);
+  console.log(state.basemap.mapObj);
   return { mapObj: state.basemap.mapObj };
 }
 
