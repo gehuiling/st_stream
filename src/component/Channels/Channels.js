@@ -9,11 +9,13 @@ import {
   Switch,
   Link,
   Route,
-  Redirect
+  Redirect,
+
 } from "react-router-dom";
 
 import { connect } from 'react-redux';
 import Mapmatch from '../ShowLayer/Mapmatch';
+import Heatmap from '../ShowLayer/Heatmap';
 
 const parse = require('wellknown');
 
@@ -25,7 +27,7 @@ const { Sider } = Layout;
  */
 class Channels extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
   state = {
     collapsed: false,
@@ -133,7 +135,7 @@ class Channels extends React.Component {
             <Switch>
               <Route path="/" exact />
               <Route path="/mapmatching" component={Mapmatch} />
-              <Route path="/heatmap" component="" />
+              <Route path="/heatmap" component= { Heatmap } />
               <Route path="/congestion" component="" />
               <Route path="/addmore" component="" />
             </Switch>

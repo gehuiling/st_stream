@@ -9,8 +9,8 @@ export const mapboxMap = {
   //"https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2xlZXB5Z2dnIiwiYSI6ImNqd3c1eG1vcTBnY2ozenFzeXplODIxMGIifQ.XYsbgqbl7JQcmopfr9T5hQ",
 }
 
-export const topicsName = {
-  MAP_MATCH: "mapmathcing-result",
-  HEATMAP: "heatmap_result",
+// export const topicsName = {
+//   MAP_MATCH: "mapmathcing-result1",
+//   HEATMAP: "heatmap_result1",
 
-}
+// }

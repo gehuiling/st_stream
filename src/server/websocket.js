@@ -2,14 +2,13 @@ const express = require('express');
 const expressWs = require('express-ws');
 const router = express.Router();
 const kafka = require('kafka-node');
+const topicsName = require('./topics')
 
 expressWs(router);
 
 router.ws('/streamviz', (ws, req) => {
     ws.send('连接成功');
     if (ws.readyState === ws.OPEN) {
-
-        const mapmatching_topic = "mapmathcing-result1";
 
         const client = new kafka.KafkaClient({
             kafkaHost: 'localhost:9092',
@@ -19,7 +18,7 @@ router.ws('/streamviz', (ws, req) => {
 
         let consumer = new Consumer(
             client, [{
-                topic: mapmatching_topic,
+                topic: topicsName.MAP_MATCH,
                 partition: 0
             }], {
                 autoCommit: true,
