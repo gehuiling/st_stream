@@ -1,8 +1,8 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
-import { StarOutlined, SettingOutlined, AlertOutlined, MonitorOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu } from 'antd';
+import { StarOutlined, SettingOutlined, AlertOutlined, MonitorOutlined, ClearOutlined } from '@ant-design/icons';
 import './Channels.css';
-import L, { LayerGroup,GridLayer } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet-draw';
 import {
   BrowserRouter as Router,
@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 
 import { connect } from 'react-redux';
+import Mapmatch from '../ShowLayer/Mapmatch';
 
 const parse = require('wellknown');
 
@@ -33,15 +34,17 @@ class Channels extends React.Component {
 
   onCollapse = (collapsed) => {
     // console.log(collapsed);
-    this.setState({ collapsed });   
+    this.setState({ collapsed });
+    // console.log(this.props.mapObj);
+
   }
 
   componentDidMount() {
-    this.reveiveTopics();
+    // this.reveiveTopics();
   }
 
   reveiveTopics = () => {
-    var ws = new WebSocket(`ws://127.0.0.1:3002/mapmatching`);
+    var ws = new WebSocket(`ws://127.0.0.1:3002/streamviz`);
 
     ws.onopen = e => {
         console.log(`WebSocket 连接状态： ${ws.readyState}`);
@@ -78,9 +81,9 @@ class Channels extends React.Component {
   render() {
     return (
       <Router>
-        <Switch>
+        {/* <Switch> */}
           <React.Fragment>
-            <Route path="/" exact />
+            {/* <Route path="/" exact /> */}
             <Layout style={{ minHeight: '100vh', background: 'rgba(255,255,255,0.08)' }}>
               <Sider
                 collapsible
@@ -99,42 +102,50 @@ class Channels extends React.Component {
                   <Menu.Item key="mapmatching">
                     <Link to='/mapmatching'>
                       <StarOutlined />
-                      <span> 实时地图匹配 </span>
-                    </Link>
-                  </Menu.Item>
-
-                  <Menu.Item key="congestion">
-                    <Link to='/congestion'>
-                      <SettingOutlined />
-                      <span> 拥堵计算 </span>
+                      <span> 流式地图匹配 </span>
                     </Link>
                   </Menu.Item>
 
                   <Menu.Item key="heatmap">
                     <Link to='/heatmap'>
-                      <AlertOutlined />
-                      <span> 热力图计算 </span>
+                      <SettingOutlined />
+                      <span> 实时汇聚 </span>
                     </Link>
                   </Menu.Item>
-                  <Menu.Item key="stsearch">
-                    <Link to='/stsearch'>
+
+                  <Menu.Item key="congestion">
+                    <Link to='/congestion'>
+                      <AlertOutlined />
+                      <span> 路段拥堵计算 </span>
+                    </Link>
+                  </Menu.Item>
+
+                  <Menu.Item key="addmore">
+                    <Link to='/addmore'>
                       <MonitorOutlined />
-                      <span> 时空查询 </span>
+                      <span> 更多... </span>
                     </Link>
                   </Menu.Item>
                 </Menu>
               </Sider>
             </Layout>
-            <Redirect to="/" />
+
+            <Switch>
+              <Route path="/" exact />
+              <Route path="/mapmatching" component={Mapmatch} />
+              <Route path="/heatmap" component="" />
+              <Route path="/congestion" component="" />
+              <Route path="/addmore" component="" />
+            </Switch>
+            {/* <Redirect to="/" /> */}
           </React.Fragment>
-        </Switch>
       </Router>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.basemap.mapObj);
+  // console.log(state.basemap.mapObj);
   return { mapObj: state.basemap.mapObj };
 }
 
