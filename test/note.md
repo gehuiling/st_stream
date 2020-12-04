@@ -84,3 +84,6 @@ sudo tar -zxvf *.tar.gz
 ```shell
 ./zkServer.sh start-foreground
 ```
+
+xiamen.properties`/home/gehuiling/Code/glink/glink-examples/src/main/resources/mapmathcing/road-types.json`
+TileExample:`/home/gehuiling/Code/glink/glink-examples/src/main/resources/xiamen`

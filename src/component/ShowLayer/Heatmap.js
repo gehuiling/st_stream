@@ -7,8 +7,6 @@ import { useRouteMatch } from 'react-router-dom';
 const parse = require('wellknown');
 
 const Heatmap = ({ mapObj }) => {
-    //#region 实验
-        
         var ws = new WebSocket(`ws://127.0.0.1:3002/streamviz`);
     
         ws.onopen = e => {
@@ -24,17 +22,14 @@ const Heatmap = ({ mapObj }) => {
             return "rgba(" + r + "," + g + "," + b + "," + a + ")";
         }
 
-        ws.onmessage = message => {
-            let heatmap_msg = JSON.parse(message.data);
-            // console.log(heatmap_msg["tiles"]);
-            var tiles = new L.GridLayer();
-            tiles.createTile = function (coords) {
+        //#region 添加网格标注方便观察
+        var tiles1 = new L.GridLayer();
+            tiles1.createTile = function (coords) {
                 var tile = L.DomUtil.create('canvas', 'leaflet-tile');
                 var ctx = tile.getContext('2d');
-                var size = this.getTileSize()
-                // console.log(this)
-                tile.width = size.x
-                tile.height = size.y
+                var size = this.getTileSize();
+                tile.width = size.x;
+                tile.height = size.y;
                 // 将切片号乘以切片分辨率，默认为256pixel,得到切片左上角的绝对像素坐标
                 var nwPoint = coords.scaleBy(size)
                 // 根据绝对像素坐标，以及缩放层级，反投影得到其经纬度
@@ -56,6 +51,19 @@ const Heatmap = ({ mapObj }) => {
                 ctx.lineTo(0, size.y - 1);
                 ctx.closePath();
                 ctx.stroke();
+                return tile;
+            }
+        tiles1.addTo(mapObj);
+        //#endregion
+        
+        ws.onmessage = message => {
+            let heatmap_msg = JSON.parse(message.data);
+            console.log( heatmap_msg);
+            var tiles = new L.GridLayer();
+            tiles.createTile = function (coords) {
+                var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+                var ctx = tile.getContext('2d');
+            
                 let tile_x = heatmap_msg.x;
                 let tile_y = heatmap_msg.y;
                 let tile_data = heatmap_msg.data;
@@ -73,18 +81,15 @@ const Heatmap = ({ mapObj }) => {
                         ctx.fillStyle = p_color;
                         ctx.fillRect(x,y,10,10);
                     }
-
                 }
                 return tile;
             }
             tiles.addTo(mapObj);
-          
         }
-    
         ws.onclose = message => {
             console.log(`WebSocket连接已关闭:${ws.readyState}`)
         }
-        //#endregion 实验
+        
 
     return null;
 }

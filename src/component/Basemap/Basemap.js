@@ -49,7 +49,7 @@ class Basemap extends React.Component {
 
         //#region mapbox底图
         var mapboxTile = L.tileLayer(mapboxMap.mapboxUrl, {
-            maxZoom: 23,
+            maxZoom: 20,
             minZoom: 2,
             opacity: 0.8,
         });
@@ -62,7 +62,8 @@ class Basemap extends React.Component {
             zoomOffset: -1
         })
             .addLayer(mapboxTile)
-            .setView([24.494413, 118.126646], 14);
+            .setView([45.92058, 118.081054], 13);
+            
         //#endregion
 
         this.props.initMap(leafletMap);

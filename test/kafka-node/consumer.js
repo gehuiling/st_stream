@@ -3,7 +3,7 @@
 const kafka = require('kafka-node');
 var parse = require('wellknown');
 
-const mapmatching_topic = "t1"; // mapmatching-origion1
+const mapmatching_topic = "tile-test"; // mapmatching-origion1
 
 const client = new kafka.KafkaClient({
     kafkaHost: 'localhost:9092',
@@ -28,7 +28,7 @@ consumer.on('message', onMessage);
 consumer.on('error', onError);
 
 function onMessage (message) {
-    var result_point = JSON.parse(message.value);
+    var result_point = message.value;
     console.log(result_point);
     // console.log(parse(result_point["point"]).coordinates[0]+'   '+parse(result_point["point"]).coordinates[1]);
 }

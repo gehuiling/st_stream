@@ -1,6 +1,6 @@
 const topicsName = {
     MAP_MATCH: "mapmathcing-result1",
-    HEATMAP: "heatmap_result1",
+    HEATMAP: "tile-test",
     
 }
 
