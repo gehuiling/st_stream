@@ -18,7 +18,7 @@ router.ws('/streamviz', (ws, req) => {
 
         let consumer = new Consumer(
             client, [{
-                topic: topicsName.HEATMAP,
+                topic: topicsName.MAP_MATCH,
                 partition: 0
             }], {
                 autoCommit: true,

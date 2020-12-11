@@ -16,7 +16,7 @@ const Heatmap = ({ mapObj }) => {
         var setColor = (count) => {
             var lc = Math.log(count + 1) / Math.log(10);
             var r = Math.floor(256 * Math.min(1, lc));
-            var g = Math.floor(256 * Math.min(1, Math.max(0, lc)));
+            var g = Math.floor(256 * Math.min(1, Math.max(0, lc-1)));
             var b = Math.floor(256 * Math.min(1, Math.max(0, lc-2)));
             var a = Math.min(1, lc);
             return "rgba(" + r + "," + g + "," + b + "," + a + ")";
@@ -55,7 +55,7 @@ const Heatmap = ({ mapObj }) => {
             }
         tiles1.addTo(mapObj);
         //#endregion
-        
+
         ws.onmessage = message => {
             let heatmap_msg = JSON.parse(message.data);
             console.log( heatmap_msg);
